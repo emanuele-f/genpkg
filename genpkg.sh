@@ -58,6 +58,12 @@ function check_return {
   fi
 }
 
+function term_handler {
+  cleanup
+  echo -e "\nAbort"
+  exit 1
+}
+
 function init_pkg_info {
   local dname="${SOURCE_DIR##*/}"
   
@@ -140,6 +146,8 @@ if [[ -z "$PKGDIR" ]];then
   PKGDIR=`mktemp -d`
 fi
 PKGFILE="$PKGDIR/PKGBUILD.$PKG_NAME"
+
+trap term_handler SIGTERM SIGINT SIGHUP
 
 if [[ -z "$CUSTOM_PKGBUILD" ]]; then
   [[ $USE_DEFAULTS -eq 0 ]] && read_config
