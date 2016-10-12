@@ -71,7 +71,7 @@ function init_pkg_info {
     # From git release
     PKG_NAME="$dname"
     cd "$SOURCE_DIR"
-    PKG_VERSION=`printf "r%s.%s" $(git rev-list --count dev) $(git rev-parse --short dev)`
+    PKG_VERSION=`printf "r%s.%s" $(git rev-list --count HEAD) $(git rev-parse --short HEAD)`
     cd - >/dev/null
   else
     # From directory name
