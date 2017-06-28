@@ -12,6 +12,7 @@ DO_INSTALL=0
 JUST_PKGBUILD=0
 CUSTOM_PKG_DIR=0
 CUSTOM_PKGBUILD=
+INSTALL_TARGET="install"
 
 PKG_NAME=
 PKG_VERSION=
@@ -25,10 +26,11 @@ function usage {
 Usage: `basename $0` [options] source_dir
 
 Options:
- -d         do not prompt for configuration but use default
- -i         do not copy built package to current dir, just install it
- -p         just save the generated PKGBUILD to the current directory and exit
- -s [file]  use the provided file as PKGBUILD
+ -d           do not prompt for configuration but use default
+ -i           do not copy built package to current dir, just install it
+ -p           just save the generated PKGBUILD to the current directory and exit
+ -m [target]  will run 'make [target]' to install the package
+ -s [file]    use the provided file as PKGBUILD
 EOF
 
   exit 1
@@ -126,6 +128,7 @@ while [[ ! -z "$1" ]]; do
     -i) DO_INSTALL=1;;
     -p) CUSTOM_PKG_DIR=1; PKGDIR="."; JUST_PKGBUILD=1;;
     -s) shift; CUSTOM_PKGBUILD="$1";;
+    -m) shift; INSTALL_TARGET="$1";;
      *) [[ -z "$SOURCE_DIR" ]] && SOURCE_DIR=`readlink -f "$1"` || usage
   esac
   
@@ -168,7 +171,7 @@ conflicts=($PKG_CONFLICTS)
 
 package() {
   cd "$SOURCE_DIR"
-  make DESTDIR="\${pkgdir}" install
+  make DESTDIR="\${pkgdir}" $INSTALL_TARGET
 }
 EOF
 
